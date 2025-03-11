@@ -8,7 +8,7 @@ const fs = require("fs")
 
 // Initialize Express app
 const app = express()
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000
 
 // Middleware
 app.use(cors())
@@ -308,4 +308,3 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
   console.log(`Access the application at http://localhost:${PORT}`)
 })
-
