@@ -1,10 +1,15 @@
-const express = require("express")
-const cors = require("cors")
-const sqlite3 = require("sqlite3").verbose()
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-const path = require("path")
-const fs = require("fs")
+import express from "express"
+import cors from "cors"
+import sqlite3 from "sqlite3"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import path from "path"
+import fs from "fs"
+import { fileURLToPath } from "url"
+
+// Get current file directory (equivalent to __dirname in CommonJS)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Initialize Express app
 const app = express()

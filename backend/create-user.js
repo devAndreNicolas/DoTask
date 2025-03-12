@@ -1,5 +1,5 @@
-const sqlite3 = require("sqlite3").verbose()
-const bcrypt = require("bcrypt")
+import sqlite3 from "sqlite3"
+import bcrypt from "bcrypt"
 
 // Conectar ao banco de dados
 const db = new sqlite3.Database("./database.sqlite", (err) => {
@@ -15,23 +15,25 @@ const name = "Admin"
 const email = "admin@exemplo.com"
 const password = "admin123" // Senha em texto puro
 
-// Criar tabela de usuários se não existir
-db.run(
-  `
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`,
-  async (err) => {
-    if (err) {
-      console.error("Erro ao criar tabela:", err)
-      db.close()
-      process.exit(1)
-    }
+// Função assíncrona para criar o usuário
+const createUser = async () => {
+  try {
+    // Criar tabela de usuários se não existir
+    await new Promise((resolve, reject) => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`,
+        (err) => {
+          if (err) reject(err)
+          resolve()
+        }
+      )
+    })
 
     // Hash da senha
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -65,8 +67,15 @@ db.run(
           }
 
           db.close()
-        },
+        }
       )
     })
-  },
-)
+  } catch (error) {
+    console.error("Erro no processo:", error)
+    db.close()
+    process.exit(1)
+  }
+}
+
+// Executar a função de criação de usuário
+createUser();
